@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-
+import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import Post from './Post';
+
+import Post from './components/posts/Post';
+import NewPost from './components/posts/NewPost';
+import Posts from './components/posts/Posts';
 import navStyles from './styles/navigationStyles';
-import Posts from './Posts';
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -12,21 +13,35 @@ class Home extends React.Component {
     ...navStyles
   };
 
-  goToPost = () => {
-    this.props.navigation.navigate('Post');
+  newPost = () => {
+    this.props.navigation.navigate('NewPost');
   };
 
   render() {
     return (
       <View style={styles.container}>
         <Posts {...this.props} />
+        <TouchableHighlight onPress={this.newPost} style={styles.newPost}>
+          <Text style={styles.newPostText}>New Post +</Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {}
+  container: {
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  newPost: {
+    backgroundColor: '#82D8D8',
+    padding: 20
+  },
+  newPostText: {
+    fontSize: 20,
+    textAlign: 'center'
+  }
 });
 
 const AppNavigator = createStackNavigator({
@@ -35,6 +50,9 @@ const AppNavigator = createStackNavigator({
   },
   Post: {
     screen: Post
+  },
+  NewPost: {
+    screen: NewPost
   }
 });
 
