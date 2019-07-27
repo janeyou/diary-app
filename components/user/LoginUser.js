@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { compose, graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import UserForm from './UserForm';
 
-export default class LoginUser extends Component {
+class LoginUser extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-  loginUser = () => {};
+  loginUser = async ({ email, password }) => {
+    try {
+      const signin = await this.props.signinUser({
+        variables: { email, password }
+      });
+      console.log(signin.data.signinUser.token);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   render() {
     return (
@@ -19,3 +30,13 @@ export default class LoginUser extends Component {
     );
   }
 }
+
+const signinUser = gql`
+  mutation signinUser($email: String!, $password: String!) {
+    signinUser(email: { email: $email, password: $password }) {
+      token
+    }
+  }
+`;
+
+export default graphql(signinUser, { name: 'signinUser' })(LoginUser);

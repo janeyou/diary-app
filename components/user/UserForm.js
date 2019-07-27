@@ -11,7 +11,13 @@ export default class UserForm extends Component {
     };
   }
 
-  submitForm = () => {};
+  submitForm = () => {
+    const { email, password } = this.state;
+    this.props.onSubmit({
+      email,
+      password
+    });
+  };
 
   render() {
     return (
@@ -29,7 +35,7 @@ export default class UserForm extends Component {
           <Input
             secureTextEntry
             value={this.state.password}
-            onChangeText={email => this.setState({ password })}
+            onChangeText={password => this.setState({ password })}
           />
         </Item>
         <Button title={this.props.type} onPress={this.submitForm} />
