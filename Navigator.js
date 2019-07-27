@@ -8,6 +8,8 @@ import NewPost from './components/posts/NewPost';
 import Posts from './components/posts/Posts';
 import navStyles from './styles/navigationStyles';
 
+import Login from './components/user/Login';
+
 class Home extends React.Component {
   static navigationOptions = {
     title: 'Home',
@@ -44,16 +46,23 @@ const styles = StyleSheet.create({
   }
 });
 
-const AppNavigator = createStackNavigator({
-  Home: {
-    screen: Home
-  },
-  Post: {
-    screen: Post
-  },
-  NewPost: {
-    screen: NewPost
-  }
-});
+const Navigator = createAppContainer(
+  createStackNavigator({
+    Home: {
+      screen: Home
+    },
+    Post: {
+      screen: Post
+    },
+    NewPost: {
+      screen: NewPost
+    }
+  })
+);
 
-export default createAppContainer(AppNavigator);
+const NavWrapper = props => {
+  return <Login />;
+  return <Navigator />;
+};
+
+export default NavWrapper;

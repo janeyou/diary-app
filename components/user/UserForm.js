@@ -1,0 +1,39 @@
+import React, { Component } from 'react';
+import { View, Text, Button } from 'react-native';
+import { Form, Item, Input, Label } from 'native-base';
+
+export default class UserForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: ''
+    };
+  }
+
+  submitForm = () => {};
+
+  render() {
+    return (
+      <Form>
+        <Item floatingLabel>
+          <Label>Email</Label>
+          <Input
+            keyboardType="email-address"
+            value={this.state.email}
+            onChangeText={email => this.setState({ email })}
+          />
+        </Item>
+        <Item floatingLabel>
+          <Label>Password</Label>
+          <Input
+            secureTextEntry
+            value={this.state.password}
+            onChangeText={email => this.setState({ password })}
+          />
+        </Item>
+        <Button title={this.props.type} onPress={this.submitForm} />
+      </Form>
+    );
+  }
+}

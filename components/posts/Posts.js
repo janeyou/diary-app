@@ -45,7 +45,7 @@ class Posts extends Component {
 
 const postsQuery = gql`
   query postsQuery {
-    allPosts {
+    allPosts(orderBy: createdAt_DESC) {
       id
       title
     }
