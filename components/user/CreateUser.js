@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { compose, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-
 import UserForm from './UserForm';
 
 class CreateUser extends Component {
