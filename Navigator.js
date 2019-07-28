@@ -1,7 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableHighlight,
+  ActivityIndicator
+} from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Fab, Icon } from 'native-base';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import Post from './components/posts/Post';
 import NewPost from './components/posts/NewPost';
@@ -60,9 +68,22 @@ const Navigator = createAppContainer(
   })
 );
 
-const NavWrapper = props => {
-  return <Login />;
+const NavWrapper = ({ loading, user }) => {
+  console.log(user);
+  if (loading) return <ActivityIndicator size="large" />;
+  if (!user) return <Login />;
   return <Navigator />;
 };
 
-export default NavWrapper;
+const userQuery = gql`
+  query userQuery {
+    user {
+      id
+      email
+    }
+  }
+`;
+
+export default graphql(userQuery, { props: ({ data }) => ({ ...data }) })(
+  NavWrapper
+);

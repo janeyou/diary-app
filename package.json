@@ -10,6 +10,7 @@
   "dependencies": {
     "@expo/vector-icons": "^10.0.3",
     "apollo-boost": "^0.4.3",
+    "apollo-link-context": "^1.0.18",
     "expo": "^33.0.0",
     "graphql": "^14.4.2",
     "native-base": "^2.13.4",
