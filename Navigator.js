@@ -4,12 +4,14 @@ import {
   View,
   Text,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Button
 } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Fab, Icon } from 'native-base';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo';
 
 import Post from './components/posts/Post';
 import NewPost from './components/posts/NewPost';
@@ -17,6 +19,7 @@ import Posts from './components/posts/Posts';
 import navStyles from './styles/navigationStyles';
 
 import Login from './components/user/Login';
+import { signOut } from './loginUtils';
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -32,6 +35,13 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Posts {...this.props} />
+        <Button
+          onPress={() => {
+            signOut();
+            this.props.client.resetStore();
+          }}
+          title="Logout"
+        />
         <Fab style={styles.newPost} onPress={this.newPost}>
           <Icon name="add" />
         </Fab>
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
 const Navigator = createAppContainer(
   createStackNavigator({
     Home: {
-      screen: Home
+      screen: withApollo(Home)
     },
     Post: {
       screen: Post
