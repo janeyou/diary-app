@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Fab, Icon } from 'native-base';
 
 import navStyles from '../../styles/navigationStyles';
 
@@ -13,12 +14,23 @@ class Post extends Component {
     };
   };
 
+  editPost = () => {
+    const { Post } = this.props;
+    this.props.navigation.navigate('EditPost', {
+      id: Post.id,
+      title: Post.title
+    });
+  };
+
   render() {
     const { loading, Post } = this.props;
     if (loading) return <ActivityIndicator size="large" />;
     return (
       <View style={styles.container}>
         <Text style={styles.bodyText}>{Post.body}</Text>
+        <Fab style={styles.editPost} onPress={this.editPost}>
+          <Icon name="create" />
+        </Fab>
       </View>
     );
   }
@@ -26,7 +38,11 @@ class Post extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20
+    padding: 20,
+    flex: 1
+  },
+  editPost: {
+    backgroundColor: '#82D8D8'
   },
   bodyText: {
     fontSize: 16

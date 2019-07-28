@@ -62,6 +62,6 @@ const newPost = gql`
 export default graphql(newPost, {
   name: 'newPost',
   options: {
-    refetchQueries: ['postsQuery']
+    refetchQueries: ['userQuery']
   }
 })(NewPost);

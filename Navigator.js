@@ -15,6 +15,7 @@ import { withApollo } from 'react-apollo';
 
 import Post from './components/posts/Post';
 import NewPost from './components/posts/NewPost';
+import EditPost from './components/posts/EditPost';
 import Posts from './components/posts/Posts';
 import navStyles from './styles/navigationStyles';
 
@@ -74,6 +75,9 @@ const Navigator = createAppContainer(
     },
     NewPost: {
       screen: NewPost
+    },
+    EditPost: {
+      screen: EditPost
     }
   })
 );

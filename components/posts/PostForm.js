@@ -3,11 +3,15 @@ import { StyleSheet, View, TextInput, Button } from 'react-native';
 import { Form, Item, Input, Label } from 'native-base';
 
 export default class PostForm extends Component {
+  static defaultProps = {
+    post: {}
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
-      body: ''
+      title: this.props.post.title || '',
+      body: this.props.post.body || ''
     };
   }
 
