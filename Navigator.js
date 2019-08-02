@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  StyleSheet,
   ActivityIndicator,
   Button,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { Fab } from 'native-base';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { withApollo } from 'react-apollo';
@@ -22,6 +21,7 @@ import navStyles from './styles/navigationStyles';
 
 import Login from './components/user/Login';
 import { signOut } from './loginUtils';
+import Menu from './components/Menu/Menu';
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -37,6 +37,7 @@ class Home extends React.Component {
   render() {
     return (
       <Container>
+        <Menu />
         <SafeAreaView>
           <ScrollView>
             <TitleBar>
@@ -59,26 +60,34 @@ class Home extends React.Component {
               }}
               title="Logout"
             />
-            <Fab style={styles.newPost} onPress={this.newPost}>
-              <Icon.Ionicons name="ios-add" />
-            </Fab>
           </ScrollView>
         </SafeAreaView>
+        <TouchableOpacity
+          onPress={this.newPost}
+          style={{
+            position: 'absolute',
+            bottom: 10,
+            right: 10
+          }}
+        >
+          <AddButton>
+            <Icon.Ionicons name="ios-add" size={44} color="white" />
+          </AddButton>
+        </TouchableOpacity>
       </Container>
     );
   }
 }
 
-//todo
-const styles = StyleSheet.create({
-  newPost: {
-    backgroundColor: '#82D8D8'
-  },
-  newPostText: {
-    fontSize: 20,
-    textAlign: 'center'
-  }
-});
+const AddButton = styled.View`
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: #82d8d8;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+`;
 
 const Subtitle = styled.Text`
   color: #b8bece;
