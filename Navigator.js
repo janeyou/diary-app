@@ -4,14 +4,17 @@ import {
   Button,
   ScrollView,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated,
+  Easing,
+  StatusBar
 } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { graphql } from 'react-apollo';
+import { withApollo, compose, Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { withApollo } from 'react-apollo';
 import styled from 'styled-components';
 import * as Icon from '@expo/vector-icons';
+import { connect } from 'react-redux';
 
 import Post from './components/posts/Post';
 import NewPost from './components/posts/NewPost';
@@ -23,11 +26,63 @@ import Login from './components/user/Login';
 import { signOut } from './loginUtils';
 import Menu from './components/Menu/Menu';
 
+function mapStateToProps(state) {
+  return { action: state.action };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    openMenu: () =>
+      dispatch({
+        type: 'OPEN_MENU'
+      })
+  };
+}
+
 class Home extends React.Component {
   static navigationOptions = {
     header: null,
     title: 'Home',
     ...navStyles
+  };
+
+  state = {
+    scale: new Animated.Value(1),
+    opacity: new Animated.Value(1)
+  };
+
+  componentDidMount() {
+    StatusBar.setBarStyle('dark-content', true);
+  }
+
+  componentDidUpdate() {
+    this.toggleMenu();
+  }
+
+  toggleMenu = () => {
+    if (this.props.action == 'openMenu') {
+      Animated.timing(this.state.scale, {
+        toValue: 0.9,
+        duration: 300,
+        easing: Easing.in()
+      }).start();
+      Animated.spring(this.state.opacity, {
+        toValue: 0.5
+      }).start();
+
+      StatusBar.setBarStyle('light-content', true);
+    }
+    if (this.props.action == 'closeMenu') {
+      Animated.timing(this.state.scale, {
+        toValue: 1,
+        duration: 300,
+        easing: Easing.in()
+      }).start();
+      Animated.spring(this.state.opacity, {
+        toValue: 1
+      }).start();
+      StatusBar.setBarStyle('dark-content', true);
+    }
   };
 
   newPost = () => {
@@ -36,48 +91,119 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Container>
+      <RootView>
         <Menu />
-        <SafeAreaView>
-          <ScrollView>
-            <TitleBar>
-              <Avatar source={require('./assets/avatar.jpg')} />
-              <Title>Welcome back,</Title>
-              <Name>{this.props.screenProps.user.firstName}</Name>
-              <Icon.Ionicons
-                name="ios-notifications"
-                size={32}
-                color="#4775f2"
-                style={{ position: 'absolute', right: 20, top: 5 }}
-              />
-            </TitleBar>
-            <Subtitle>Most recent</Subtitle>
-            <Posts {...this.props} />
-            <Button
-              onPress={() => {
-                signOut();
-                this.props.client.resetStore();
-              }}
-              title="Logout"
-            />
-          </ScrollView>
-        </SafeAreaView>
-        <TouchableOpacity
-          onPress={this.newPost}
+        <AnimatedContainer
           style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10
+            transform: [{ scale: this.state.scale }],
+            opacity: this.state.opacity
           }}
         >
-          <AddButton>
-            <Icon.Ionicons name="ios-add" size={44} color="white" />
-          </AddButton>
-        </TouchableOpacity>
-      </Container>
+          <SafeAreaView>
+            <ScrollView>
+              <TitleBar>
+                <TouchableOpacity
+                  onPress={this.props.openMenu}
+                  style={{ position: 'absolute', top: 0, left: 20 }}
+                >
+                  <Avatar source={require('./assets/avatar.jpg')} />
+                </TouchableOpacity>
+                <Title>Welcome back,</Title>
+                <Name>{this.props.screenProps.user.firstName}</Name>
+                <Icon.Ionicons
+                  name="ios-notifications"
+                  size={32}
+                  color="#4775f2"
+                  style={{ position: 'absolute', right: 20, top: 5 }}
+                />
+              </TitleBar>
+              <Subtitle>Most recent</Subtitle>
+              <Posts {...this.props} />
+              <Button
+                onPress={() => {
+                  signOut();
+                  this.props.client.resetStore();
+                }}
+                title="Logout"
+              />
+            </ScrollView>
+          </SafeAreaView>
+          <TouchableOpacity
+            onPress={this.newPost}
+            style={{
+              position: 'absolute',
+              bottom: 10,
+              right: 10
+            }}
+          >
+            <AddButton>
+              <Icon.Ionicons name="ios-add" size={44} color="white" />
+            </AddButton>
+          </TouchableOpacity>
+        </AnimatedContainer>
+      </RootView>
     );
   }
 }
+
+const Navigator = createAppContainer(
+  createStackNavigator({
+    Home: {
+      screen: compose(
+        withApollo,
+        connect(
+          mapStateToProps,
+          mapDispatchToProps
+        )
+      )(Home)
+    },
+    Post: {
+      screen: Post
+    },
+    NewPost: {
+      screen: NewPost
+    },
+    EditPost: {
+      screen: EditPost
+    }
+  })
+);
+
+const userQuery = gql`
+  query userQuery {
+    user {
+      id
+      email
+      firstName
+      posts(orderBy: createdAt_DESC) {
+        id
+        title
+        createdAt
+      }
+    }
+  }
+`;
+
+const NavWrapper = () => (
+  <Query query={userQuery}>
+    {({ loading, data: { user } }) =>
+      loading ? (
+        <ActivityIndicator size="large" />
+      ) : !user ? (
+        <Login />
+      ) : (
+        <Navigator screenProps={{ user }} />
+      )
+    }
+  </Query>
+);
+
+export default NavWrapper;
+
+const RootView = styled.View`
+  background: black;
+  flex: 1;
+`;
 
 const AddButton = styled.View`
   width: 44px;
@@ -101,7 +227,10 @@ const Subtitle = styled.Text`
 const Container = styled.View`
   flex: 1;
   background-color: #f0f3f5;
+  border-radius: 10px;
 `;
+
+const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
 const Title = styled.Text`
   font-size: 16px;
@@ -125,50 +254,4 @@ const Avatar = styled.Image`
   height: 44px;
   background: black;
   border-radius: 22px;
-  margin-left: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
 `;
-
-const Navigator = createAppContainer(
-  createStackNavigator({
-    Home: {
-      screen: withApollo(Home)
-    },
-    Post: {
-      screen: Post
-    },
-    NewPost: {
-      screen: NewPost
-    },
-    EditPost: {
-      screen: EditPost
-    }
-  })
-);
-
-const NavWrapper = ({ loading, user }) => {
-  if (loading) return <ActivityIndicator size="large" />;
-  if (!user) return <Login />;
-  return <Navigator screenProps={{ user }} />;
-};
-
-const userQuery = gql`
-  query userQuery {
-    user {
-      id
-      email
-      firstName
-      posts(orderBy: createdAt_DESC) {
-        id
-        title
-        createdAt
-      }
-    }
-  }
-`;
-
-export default graphql(userQuery, { props: ({ data }) => ({ ...data }) })(
-  NavWrapper
-);

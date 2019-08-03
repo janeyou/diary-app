@@ -4,9 +4,28 @@ import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
 import Navigator from './Navigator';
 import { getToken } from './loginUtils';
+
+const initialState = {
+  action: ''
+};
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'CLOSE_MENU':
+      return { action: 'closeMenu' };
+    case 'OPEN_MENU':
+      return { action: 'openMenu' };
+    default:
+      return state;
+  }
+};
+
+const store = createStore(reducer);
 
 const authLink = setContext(async (req, { headers }) => {
   const token = await getToken();
@@ -33,7 +52,9 @@ export default class App extends React.Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <Navigator />
+        <Provider store={store}>
+          <Navigator />
+        </Provider>
       </ApolloProvider>
     );
   }
