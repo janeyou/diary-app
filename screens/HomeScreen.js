@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   Button,
   ScrollView,
   SafeAreaView,
@@ -9,23 +8,16 @@ import {
   Easing,
   StatusBar
 } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { withApollo, compose, Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import styled from 'styled-components';
 import * as Icon from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
-import Post from './components/posts/Post';
-import NewPost from './components/posts/NewPost';
-import EditPost from './components/posts/EditPost';
-import Posts from './components/posts/Posts';
-import navStyles from './styles/navigationStyles';
+import Posts from '../components/posts/Posts';
+import navStyles from '../styles/navigationStyles';
 
-import Login from './components/user/Login';
-import { signOut } from './loginUtils';
-import Menu from './components/Menu/Menu';
-import Avatar from './components/Menu/Avatar';
+import { signOut } from '../loginUtils';
+import Menu from '../components/Menu/Menu';
+import Avatar from '../components/Menu/Avatar';
 
 function mapStateToProps(state) {
   return { action: state.action };
@@ -40,7 +32,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Home extends React.Component {
+class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
     title: 'Home',
@@ -147,59 +139,10 @@ class Home extends React.Component {
   }
 }
 
-const Navigator = createAppContainer(
-  createStackNavigator({
-    Home: {
-      screen: compose(
-        withApollo,
-        connect(
-          mapStateToProps,
-          mapDispatchToProps
-        )
-      )(Home)
-    },
-    Post: {
-      screen: Post
-    },
-    NewPost: {
-      screen: NewPost
-    },
-    EditPost: {
-      screen: EditPost
-    }
-  })
-);
-
-const userQuery = gql`
-  query userQuery {
-    user {
-      id
-      email
-      firstName
-      posts(orderBy: createdAt_DESC) {
-        id
-        title
-        createdAt
-      }
-    }
-  }
-`;
-
-const NavWrapper = () => (
-  <Query query={userQuery}>
-    {({ loading, data: { user } }) =>
-      loading ? (
-        <ActivityIndicator size="large" />
-      ) : !user ? (
-        <Login />
-      ) : (
-        <Navigator screenProps={{ user }} />
-      )
-    }
-  </Query>
-);
-
-export default NavWrapper;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);
 
 const RootView = styled.View`
   background: black;

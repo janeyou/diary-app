@@ -7,7 +7,7 @@ import { setContext } from 'apollo-link-context';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
-import Navigator from './Navigator';
+import AppNavigator from './navigators/AppNavigator';
 import { getToken } from './loginUtils';
 
 const initialState = {
@@ -53,7 +53,7 @@ export default class App extends React.Component {
     return (
       <ApolloProvider client={client}>
         <Provider store={store}>
-          <Navigator />
+          <AppNavigator />
         </Provider>
       </ApolloProvider>
     );

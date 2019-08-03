@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  Button
+} from 'react-native';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Fab, Icon } from 'native-base';
@@ -9,6 +15,7 @@ import navStyles from '../../styles/navigationStyles';
 class Post extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
+      header: null,
       title: navigation.state.params.title,
       ...navStyles
     };
@@ -28,6 +35,12 @@ class Post extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.bodyText}>{Post.body}</Text>
+        <Button
+          title="Close"
+          onPress={() => {
+            this.props.navigation.goBack();
+          }}
+        />
         <Fab style={styles.editPost} onPress={this.editPost}>
           <Icon name="create" />
         </Fab>
@@ -39,7 +52,9 @@ class Post extends Component {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    flex: 1
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   editPost: {
     backgroundColor: '#82D8D8'

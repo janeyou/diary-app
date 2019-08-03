@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ScrollView,
+  TouchableOpacity
+} from 'react-native';
 import { List, ListItem, Body, Right, Icon, Item } from 'native-base';
 import Card from './Card';
 import moment from 'moment';
@@ -18,7 +24,6 @@ export default class Posts extends Component {
     )
       .then(response => response.json())
       .then(response => {
-        console.log(response);
         this.setState({
           activities: response.rows
         });
@@ -35,15 +40,45 @@ export default class Posts extends Component {
           showsHorizontalScrollIndicator={false}
         >
           {screenProps.user.posts.map(item => (
-            <Card
+            <TouchableOpacity
               key={item.id}
-              title={item.title}
-              image={require('../../assets/background2.jpg')}
-              createdAt={moment(new Date(item.createdAt)).fromNow()}
-            />
+              onPress={() =>
+                navigation.navigate('Post', {
+                  id: item.id,
+                  title: item.title
+                })
+              }
+            >
+              <Card
+                title={item.title}
+                image={require('../../assets/background2.jpg')}
+                createdAt={moment(new Date(item.createdAt)).fromNow()}
+              />
+            </TouchableOpacity>
           ))}
         </ScrollView>
         <List>
+          <FlatList
+            data={screenProps.user.posts}
+            renderItem={({ item }) => (
+              <ListItem
+                onPress={() =>
+                  navigation.navigate('Post', {
+                    id: item.id,
+                    title: item.title
+                  })
+                }
+              >
+                <Body>
+                  <Text>{item.title}</Text>
+                </Body>
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </ListItem>
+            )}
+            keyExtractor={item => item.id}
+          />
           <FlatList
             data={this.state.activities}
             renderItem={({ item, index }) => (
@@ -58,12 +93,9 @@ export default class Posts extends Component {
                 <Body>
                   <Text>{item[3]}</Text>
                 </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
               </ListItem>
             )}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
           />
         </List>
       </View>
