@@ -25,6 +25,7 @@ import navStyles from './styles/navigationStyles';
 import Login from './components/user/Login';
 import { signOut } from './loginUtils';
 import Menu from './components/Menu/Menu';
+import Avatar from './components/Menu/Avatar';
 
 function mapStateToProps(state) {
   return { action: state.action };
@@ -106,7 +107,7 @@ class Home extends React.Component {
                   onPress={this.props.openMenu}
                   style={{ position: 'absolute', top: 0, left: 20 }}
                 >
-                  <Avatar source={require('./assets/avatar.jpg')} />
+                  <Avatar />
                 </TouchableOpacity>
                 <Title>Welcome back,</Title>
                 <Name>{this.props.screenProps.user.firstName}</Name>
@@ -247,11 +248,4 @@ const TitleBar = styled.View`
   width: 100%;
   margin-top: 50px;
   padding-left: 80px;
-`;
-
-const Avatar = styled.Image`
-  width: 44px;
-  height: 44px;
-  background: black;
-  border-radius: 22px;
 `;

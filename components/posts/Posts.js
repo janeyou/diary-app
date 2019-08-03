@@ -7,7 +7,22 @@ import moment from 'moment';
 export default class Posts extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      activities: []
+    };
+  }
+
+  componentDidMount() {
+    fetch(
+      'https://www.rescuetime.com/anapi/data?key=B6396Qln0RBqiSENMdfSXWs3XP3HUIrvAdmjMPOt&perspective=interval&restrict_kind=activity&interval=hour&restrict_begin=2019-08-01&restrict_end=2019-08-01&format=json'
+    )
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        this.setState({
+          activities: response.rows
+        });
+      });
   }
 
   render() {
@@ -30,25 +45,25 @@ export default class Posts extends Component {
         </ScrollView>
         <List>
           <FlatList
-            data={screenProps.user.posts}
-            renderItem={({ item }) => (
+            data={this.state.activities}
+            renderItem={({ item, index }) => (
               <ListItem
                 onPress={() =>
                   navigation.navigate('Post', {
-                    id: item.id,
-                    title: item.title
+                    id: index,
+                    title: item[3]
                   })
                 }
               >
                 <Body>
-                  <Text>{item.title}</Text>
+                  <Text>{item[3]}</Text>
                 </Body>
                 <Right>
                   <Icon name="arrow-forward" />
                 </Right>
               </ListItem>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index}
           />
         </List>
       </View>
