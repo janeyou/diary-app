@@ -64,7 +64,9 @@ class Post extends Component {
             />
           </CloseView>
         </TouchableOpacity>
-        <Button title="Close" />
+        <Content>
+          <Body>{Post.body}</Body>
+        </Content>
 
         <TouchableOpacity
           onPress={this.editPost}
@@ -75,7 +77,7 @@ class Post extends Component {
           }}
         >
           <CreateBtn>
-            <Icon.Ionicons name="ios-create" size={44} color="white" />
+            <Icon.Ionicons name="md-create" size={32} color="white" />
           </CreateBtn>
         </TouchableOpacity>
       </Container>
@@ -103,12 +105,24 @@ export default graphql(postQuery, {
   })
 })(Post);
 
+const Content = styled.View`
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 35px;
+`;
+
+const Body = styled.Text`
+  font-size: 20px;
+  color: grey;
+  font-weight: 600;
+`;
+
 const Container = styled.View`
   flex: 1;
 `;
 
 const Cover = styled.View`
-  height: 375px;
+  height: 200px;
 `;
 const Image = styled.Image`
   width: 100%;

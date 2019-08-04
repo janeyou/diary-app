@@ -3,6 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { withApollo, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import styled from 'styled-components';
 
 import Login from '../components/user/Login';
 import TabNavigator from './TabNavigator';
@@ -28,7 +29,9 @@ const NavWrapper = () => (
   <Query query={userQuery}>
     {({ loading, data: { user } }) =>
       loading ? (
-        <ActivityIndicator size="large" />
+        <LoadingView>
+          <ActivityIndicator size="large" />
+        </LoadingView>
       ) : !user ? (
         <Login />
       ) : (
@@ -39,3 +42,9 @@ const NavWrapper = () => (
 );
 
 export default NavWrapper;
+
+const LoadingView = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
