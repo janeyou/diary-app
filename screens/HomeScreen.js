@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import styled from 'styled-components';
 import * as Icon from '@expo/vector-icons';
@@ -46,6 +47,8 @@ class HomeScreen extends React.Component {
 
   componentDidMount() {
     StatusBar.setBarStyle('dark-content', true);
+
+    if (Platform.OS == 'android') StatusBar.setBarStyle('light-content', true);
   }
 
   componentDidUpdate() {
@@ -110,7 +113,7 @@ class HomeScreen extends React.Component {
                   style={{ position: 'absolute', right: 20, top: 5 }}
                 />
               </TitleBar>
-              <Subtitle>Most recent</Subtitle>
+              <Subtitle>{'Most recent'.toUpperCase()}</Subtitle>
               <Posts {...this.props} />
               <Button
                 onPress={() => {

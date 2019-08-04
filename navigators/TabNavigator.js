@@ -59,7 +59,7 @@ HomeStack.navigationOptions = ({ navigation }) => {
 
 const DiaryStack = createStackNavigator({
   Diary: {
-    screen: DiaryScreen
+    screen: NewPost
   }
 });
 
@@ -67,7 +67,7 @@ DiaryStack.navigationOptions = {
   tabBarLabel: 'Diary',
   tabBarIcon: ({ focused }) => (
     <Icon.Ionicons
-      name="ios-albums"
+      name="ios-create"
       size={26}
       color={focused ? activeColor : inactiveColor}
     />

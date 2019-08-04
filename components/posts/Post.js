@@ -47,7 +47,7 @@ class Post extends Component {
         <Cover>
           <Image source={require('../../assets/background2.jpg')} />
           <Title>{Post.title}</Title>
-          <Time>{moment(new Date(Post.createdAt)).fromNow()}</Time>
+          <Time>{moment(new Date(Post.createdAt)).format('LLLL')}</Time>
         </Cover>
         <TouchableOpacity
           onPress={() => {
