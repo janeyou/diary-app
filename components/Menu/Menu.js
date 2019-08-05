@@ -60,9 +60,9 @@ class Menu extends React.Component {
 
   handleMenu = index => {
     if (index === 3) {
-      this.props.closeMenu();
       signOut();
       this.props.client.resetStore();
+      this.props.closeMenu();
     }
   };
 
