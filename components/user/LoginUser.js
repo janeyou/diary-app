@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { compose, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -26,7 +26,6 @@ class LoginUser extends Component {
   render() {
     return (
       <View>
-        <Text>Login</Text>
         <UserForm onSubmit={this.loginUser} type="Login" />
       </View>
     );

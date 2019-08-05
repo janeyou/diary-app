@@ -12,6 +12,7 @@
     "apollo-boost": "^0.4.3",
     "apollo-link-context": "^1.0.18",
     "expo": "^33.0.0",
+    "expo-blur": "~5.0.1",
     "graphql": "^14.4.2",
     "moment": "^2.24.0",
     "native-base": "^2.13.4",

@@ -29,7 +29,6 @@ class CreateUser extends Component {
   render() {
     return (
       <View>
-        <Text>Register</Text>
         <UserForm onSubmit={this.createUser} type="Register" />
       </View>
     );

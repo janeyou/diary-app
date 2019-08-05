@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
@@ -12,11 +11,10 @@ import {
 import styled from 'styled-components';
 import * as Icon from '@expo/vector-icons';
 import { connect } from 'react-redux';
+import { withApollo, compose } from 'react-apollo';
 
 import Posts from '../components/posts/Posts';
 import navStyles from '../styles/navigationStyles';
-
-import { signOut } from '../loginUtils';
 import Menu from '../components/Menu/Menu';
 import Avatar from '../components/Menu/Avatar';
 
@@ -88,7 +86,7 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <RootView>
-        <Menu />
+        <Menu {...this.props} />
         <AnimatedContainer
           style={{
             transform: [{ scale: this.state.scale }],
@@ -115,13 +113,6 @@ class HomeScreen extends React.Component {
               </TitleBar>
               <Subtitle>{'Most recent'.toUpperCase()}</Subtitle>
               <Posts {...this.props} />
-              <Button
-                onPress={() => {
-                  signOut();
-                  this.props.client.resetStore();
-                }}
-                title="Logout"
-              />
             </ScrollView>
           </SafeAreaView>
           <TouchableOpacity
@@ -142,9 +133,12 @@ class HomeScreen extends React.Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  withApollo,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(HomeScreen);
 
 const RootView = styled.View`

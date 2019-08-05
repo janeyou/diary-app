@@ -5,6 +5,7 @@ import * as Icon from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
 import MenuItem from './MenuItem';
+import { signOut } from '../../loginUtils';
 
 function mapStateToProps(state) {
   return { action: state.action };
@@ -57,6 +58,14 @@ class Menu extends React.Component {
     }
   };
 
+  handleMenu = index => {
+    if (index === 3) {
+      this.props.closeMenu();
+      signOut();
+      this.props.client.resetStore();
+    }
+  };
+
   render() {
     return (
       <AnimatedContainer style={{ top: this.state.top }}>
@@ -81,12 +90,14 @@ class Menu extends React.Component {
         </TouchableOpacity>
         <Content>
           {items.map((item, index) => (
-            <MenuItem
+            <TouchableOpacity
               key={index}
-              icon={item.icon}
-              title={item.title}
-              text={item.text}
-            />
+              onPress={() => {
+                this.handleMenu(index);
+              }}
+            >
+              <MenuItem icon={item.icon} title={item.title} text={item.text} />
+            </TouchableOpacity>
           ))}
         </Content>
       </AnimatedContainer>

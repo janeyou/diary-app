@@ -1,14 +1,14 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import { withApollo, Query } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 
 import Login from '../components/user/Login';
 import TabNavigator from './TabNavigator';
 
-const AppNavigator = createAppContainer(withApollo(TabNavigator));
+const AppNavigator = createAppContainer(TabNavigator);
 
 const userQuery = gql`
   query userQuery {
