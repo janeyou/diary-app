@@ -18,7 +18,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "io.alchemyapp.MyDiaryApp"
+    },
+    "android": {
+      "package": "io.alchemyapp.MyDiaryApp"
     }
   }
 }
